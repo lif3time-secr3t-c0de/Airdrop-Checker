@@ -175,6 +175,9 @@
   </div>
 
   <script>
+    // 🔥 ADD THIS LINE - Your live backend URL
+    const API_BASE = "https://airdrop-checker-api.onrender.com";
+
     const el = (id) => document.getElementById(id);
 
     const nodes = {
@@ -203,7 +206,8 @@
         const headers = {};
         const key = nodes.adminKey.value.trim();
         if (key) headers["x-admin-key"] = key;
-        const res = await fetch("/api/admin/metrics", { headers });
+        // ✅ UPDATED: Added API_BASE
+        const res = await fetch(API_BASE + "/api/admin/metrics", { headers });
         if (!res.ok) {
           const txt = await res.text();
           throw new Error(txt || `HTTP ${res.status}`);
