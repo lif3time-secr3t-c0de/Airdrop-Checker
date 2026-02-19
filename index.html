@@ -336,15 +336,18 @@
     <footer class="card">
       <h2>Footer</h2>
       <div class="footer-links">
-        <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub + Commercial Terms</a>
+        <a href="https://github.com/lif3time-secr3t-c0de/Airdrop-Checker" target="_blank" rel="noopener noreferrer">GitHub + Commercial Terms</a>
         <a href="#">Donation Address: 0xDonateYourAddress</a>
-        <a href="/api/health" target="_blank" rel="noopener noreferrer">API Docs for Developers</a>
+        <a href="https://airdrop-checker-api.onrender.com/api/health" target="_blank" rel="noopener noreferrer">API Docs for Developers</a>
         <a href="mailto:enterprise@airdropchecker.example">Contact Enterprise</a>
       </div>
     </footer>
   </main>
 
   <script>
+    // 🔥 ADD THIS LINE - Your live backend URL
+    const API_BASE = "https://airdrop-checker-api.onrender.com";
+
     const el = (id) => document.getElementById(id);
     const walletsInput = el("walletInput");
     const checkBtn = el("checkBtn");
@@ -417,7 +420,8 @@
     }
 
     async function fetchScan(wallets) {
-      const res = await fetch("/api/portfolio/scan", {
+      // ✅ UPDATED: Added API_BASE
+      const res = await fetch(API_BASE + "/api/portfolio/scan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ wallets, includeTransfers: true })
@@ -427,7 +431,8 @@
     }
 
     async function fetchPredictions(wallets) {
-      const res = await fetch("/api/predictions/eligibility", {
+      // ✅ UPDATED: Added API_BASE
+      const res = await fetch(API_BASE + "/api/predictions/eligibility", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ wallets, forceRetrain: false })
