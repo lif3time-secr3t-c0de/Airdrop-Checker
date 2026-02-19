@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Airdrop Checker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #03150e;
+      --bg2: #073624;
+      --card: rgba(3, 21, 14, 0.88);
+      --line: rgba(117, 255, 172, 0.2);
+      --text: #ecfff1;
+      --muted: #a2cdb2;
+      --accent: #3cf28c;
+      --warn: #ff8b6a;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(60, 242, 140, 0.2), transparent 30%),
+        linear-gradient(130deg, var(--bg), var(--bg2));
+      min-height: 100vh;
+      padding: 18px;
+    }
+    .container {
+      width: min(1150px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .top {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    h1, h2 { margin: 0; font-family: "Sora", sans-serif; }
+    h1 { font-size: clamp(1.2rem, 2vw, 1.7rem); }
+    h2 { font-size: 1rem; margin-bottom: 10px; }
+    .muted { color: var(--muted); font-size: 0.9rem; }
+    .controls { display: flex; gap: 8px; flex-wrap: wrap; }
+    input, button {
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      padding: 9px 11px;
+      font: inherit;
+    }
+    button {
+      cursor: pointer;
+      background: linear-gradient(120deg, #3cf28c, #8eff59);
+      color: #062410;
+      font-weight: 700;
+      border: 0;
+    }
+    .grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+    }
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255,255,255,0.03);
+    }
+    .label { color: var(--muted); font-size: 0.8rem; }
+    .value { margin-top: 4px; font-weight: 700; font-size: 1.25rem; }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(117, 255, 172, 0.12);
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    th { color: var(--muted); }
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(24, minmax(5px, 1fr));
+      align-items: end;
+      gap: 4px;
+      min-height: 130px;
+      padding-top: 10px;
+    }
+    .bar {
+      border-radius: 6px 6px 2px 2px;
+      background: linear-gradient(180deg, #8eff59, #29d87a);
+      min-height: 2px;
+    }
+    .error {
+      color: var(--warn);
+      font-size: 0.86rem;
+    }
+    @media (max-width: 940px) {
+      .grid { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="card top">
+      <div>
+        <h1>Admin Dashboard</h1>
+        <div class="muted" id="updatedAt">Waiting for data...</div>
+      </div>
+      <div class="controls">
+        <input id="adminKey" type="password" placeholder="Admin API key (optional)">
+        <button id="refreshBtn">Refresh</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Users and Earnings</h2>
+      <div class="grid">
+        <div class="metric"><div class="label">Users</div><div id="usersTotal" class="value">0</div></div>
+        <div class="metric"><div class="label">Active Users</div><div id="usersActive" class="value">0</div></div>
+        <div class="metric"><div class="label">Claimed USD</div><div id="claimedUsd" class="value">$0.00</div></div>
+        <div class="metric"><div class="label">Claimable USD</div><div id="claimableUsd" class="value">$0.00</div></div>
+      </div>
+      <div class="muted" id="dbStatus">Database status: unknown</div>
+    </section>
+
+    <section class="card split">
+      <div>
+        <h2>API Usage</h2>
+        <div class="grid" style="grid-template-columns: repeat(3, minmax(120px, 1fr));">
+          <div class="metric"><div class="label">Total Requests</div><div id="reqTotal" class="value">0</div></div>
+          <div class="metric"><div class="label">Total Errors</div><div id="errTotal" class="value">0</div></div>
+          <div class="metric"><div class="label">Error Rate</div><div id="errRate" class="value">0%</div></div>
+        </div>
+        <div id="errorMessage" class="error"></div>
+      </div>
+      <div>
+        <h2>Requests (Last 24h)</h2>
+        <div id="hourlyChart" class="chart"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Top API Routes</h2>
+      <table>
+        <thead>
+          <tr><th>Route</th><th>Requests</th></tr>
+        </thead>
+        <tbody id="routesBody">
+          <tr><td colspan="2" class="muted">No data yet</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+
+    const nodes = {
+      updatedAt: el("updatedAt"),
+      usersTotal: el("usersTotal"),
+      usersActive: el("usersActive"),
+      claimedUsd: el("claimedUsd"),
+      claimableUsd: el("claimableUsd"),
+      dbStatus: el("dbStatus"),
+      reqTotal: el("reqTotal"),
+      errTotal: el("errTotal"),
+      errRate: el("errRate"),
+      routesBody: el("routesBody"),
+      hourlyChart: el("hourlyChart"),
+      errorMessage: el("errorMessage"),
+      adminKey: el("adminKey")
+    };
+
+    el("refreshBtn").addEventListener("click", loadMetrics);
+    setInterval(loadMetrics, 30000);
+    loadMetrics();
+
+    async function loadMetrics() {
+      nodes.errorMessage.textContent = "";
+      try {
+        const headers = {};
+        const key = nodes.adminKey.value.trim();
+        if (key) headers["x-admin-key"] = key;
+        const res = await fetch("/api/admin/metrics", { headers });
+        if (!res.ok) {
+          const txt = await res.text();
+          throw new Error(txt || `HTTP ${res.status}`);
+        }
+        const data = await res.json();
+        render(data);
+      } catch (err) {
+        nodes.errorMessage.textContent = "Failed to load admin metrics: " + (err.message || "Unknown error");
+      }
+    }
+
+    function render(data) {
+      nodes.updatedAt.textContent = "Updated: " + new Date(data.generatedAt).toLocaleString();
+      nodes.usersTotal.textContent = fmtInt(data.business.users.total);
+      nodes.usersActive.textContent = fmtInt(data.business.users.active);
+      nodes.claimedUsd.textContent = fmtUsd(data.business.earnings.claimedUsd);
+      nodes.claimableUsd.textContent = fmtUsd(data.business.earnings.claimableUsd);
+      nodes.dbStatus.textContent = "Database status: " + (data.business.databaseConnected ? "connected" : "not configured");
+      nodes.reqTotal.textContent = fmtInt(data.usage.totalRequests);
+      nodes.errTotal.textContent = fmtInt(data.usage.totalErrors);
+      nodes.errRate.textContent = (Number(data.usage.errorRate || 0) * 100).toFixed(2) + "%";
+      renderRoutes(data.usage.topRoutes || []);
+      renderChart(data.usage.last24h || []);
+    }
+
+    function renderRoutes(rows) {
+      if (!rows.length) {
+        nodes.routesBody.innerHTML = '<tr><td colspan="2" class="muted">No data yet</td></tr>';
+        return;
+      }
+      nodes.routesBody.innerHTML = rows
+        .map((r) => `<tr><td>${escapeHtml(r.route)}</td><td>${fmtInt(r.count)}</td></tr>`)
+        .join("");
+    }
+
+    function renderChart(points) {
+      if (!points.length) {
+        nodes.hourlyChart.innerHTML = "";
+        return;
+      }
+      const max = Math.max(...points.map((p) => p.total), 1);
+      nodes.hourlyChart.innerHTML = points
+        .map((p) => {
+          const h = Math.max(2, Math.round((p.total / max) * 120));
+          return `<div class="bar" title="${new Date(p.hourStart).toLocaleTimeString()} | ${p.total} req" style="height:${h}px"></div>`;
+        })
+        .join("");
+    }
+
+    function fmtInt(v) {
+      return Number(v || 0).toLocaleString();
+    }
+
+    function fmtUsd(v) {
+      return "$" + Number(v || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airdrop Finder | Find Your Free Crypto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-a: #03170f;
+      --bg-b: #0d3f28;
+      --bg-c: #15311f;
+      --surface: rgba(7, 31, 21, 0.86);
+      --surface-strong: rgba(5, 24, 16, 0.95);
+      --line: rgba(142, 255, 184, 0.24);
+      --text: #f2fff6;
+      --muted: #9bc9ae;
+      --green: #43f292;
+      --lime: #b7ff5f;
+      --warn: #ffd166;
+      --bad: #ff6f7d;
+      --radius: 18px;
+      --shadow: 0 22px 54px rgba(2, 10, 6, 0.55);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at 15% 8%, rgba(67, 242, 146, 0.2), transparent 34%),
+        radial-gradient(circle at 84% 13%, rgba(183, 255, 95, 0.16), transparent 30%),
+        linear-gradient(140deg, var(--bg-a), var(--bg-b), var(--bg-c));
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: min(1150px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .hero {
+      background: linear-gradient(125deg, rgba(67, 242, 146, 0.12), rgba(183, 255, 95, 0.1), rgba(5, 24, 16, 0.8));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 38%, rgba(255, 255, 255, 0.08) 50%, transparent 62%);
+      transform: translateX(-120%);
+      animation: sweep 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    h1, h2 {
+      margin: 0;
+      font-family: "Bricolage Grotesque", sans-serif;
+      letter-spacing: 0.2px;
+    }
+    h1 { font-size: clamp(1.6rem, 3vw, 2.35rem); font-weight: 800; }
+    h2 { font-size: 1.1rem; margin-bottom: 10px; }
+    .sub { color: var(--muted); margin-top: 8px; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 14px;
+      align-items: center;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 165px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: rgba(2, 20, 13, 0.84);
+      color: var(--text);
+      font: inherit;
+      padding: 12px;
+      resize: vertical;
+      outline: none;
+    }
+    textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(67, 242, 146, 0.2);
+    }
+
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    button, .btn {
+      border: 0;
+      border-radius: 11px;
+      padding: 10px 14px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .primary {
+      color: #052511;
+      background: linear-gradient(120deg, var(--green), var(--lime));
+      box-shadow: 0 10px 24px rgba(67, 242, 146, 0.24);
+    }
+    .ghost {
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--line);
+    }
+
+    .counter-grid, .result-grid, .leader-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .counter-grid { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+    .result-grid { grid-template-columns: 1.05fr 1fr; }
+    .leader-grid { grid-template-columns: 1fr auto; align-items: center; }
+
+    .metric {
+      border-radius: 13px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 12px;
+    }
+    .metric .label { color: var(--muted); font-size: 0.82rem; }
+    .metric .value { margin-top: 6px; font-size: 1.35rem; font-weight: 800; }
+
+    .big-number {
+      font-size: clamp(2rem, 4vw, 2.9rem);
+      font-weight: 800;
+      color: var(--lime);
+      text-shadow: 0 0 22px rgba(183, 255, 95, 0.18);
+    }
+
+    .list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 8px;
+    }
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 8px 10px;
+      background: rgba(255, 255, 255, 0.03);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.94rem;
+    }
+    .eligible::before { content: "✓"; color: var(--green); font-weight: 800; margin-right: 6px; }
+    .ineligible { opacity: 0.58; }
+    .upcoming { border-color: rgba(255, 209, 102, 0.45); }
+    .badge {
+      font-size: 0.76rem;
+      border-radius: 999px;
+      padding: 3px 8px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    .share-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+    }
+    th, td {
+      text-align: left;
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(142, 255, 184, 0.15);
+      font-size: 0.9rem;
+    }
+    th { color: var(--muted); font-size: 0.82rem; }
+    .whale { color: var(--lime); font-weight: 700; }
+    .tiny { color: var(--muted); font-size: 0.82rem; }
+
+    .footer-links {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 8px;
+    }
+    .footer-links a {
+      color: var(--text);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 9px 10px;
+      background: rgba(255, 255, 255, 0.04);
+      display: block;
+      font-size: 0.9rem;
+    }
+
+    .status { color: var(--muted); font-size: 0.88rem; margin-top: 6px; min-height: 20px; }
+
+    @keyframes sweep {
+      0%, 100% { transform: translateX(-120%); opacity: 0; }
+      30% { transform: translateX(0%); opacity: 1; }
+      60% { transform: translateX(120%); opacity: 0; }
+    }
+
+    @media (max-width: 980px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: 1fr; }
+      .share-grid { grid-template-columns: repeat(2, minmax(120px, 1fr)); }
+      .footer-links { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      body { padding: 12px; }
+      .counter-grid { grid-template-columns: 1fr; }
+      .row button, .share-grid .btn { width: 100%; }
+      .share-grid { grid-template-columns: 1fr; }
+      .footer-links { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="card hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Find Your Free Crypto</h1>
+          <p class="sub">Check 50+ airdrops in seconds.</p>
+          <textarea id="walletInput" placeholder="Paste wallet address(es), one per line...
+0x7e57d004f9f4d1f2dce447f7dfdf9f9ce17ccf11
+0x5f3f51f4f39c265d8f9b4a11f0473a4e83974944"></textarea>
+          <div class="row">
+            <button id="checkBtn" class="primary">CHECK</button>
+            <button id="sampleBtn" class="ghost">Load Sample</button>
+            <button id="clearBtn" class="ghost">Clear</button>
+          </div>
+          <div id="status" class="status"></div>
+        </div>
+        <div class="metric">
+          <div class="label">Instant Preview</div>
+          <div class="big-number" id="heroValue">$0.00</div>
+          <div class="tiny">Detected value from current scan</div>
+          <ul id="heroTop" class="list" style="margin-top:10px;">
+            <li class="item"><span>No scan yet</span><span class="badge">-</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Live Counter</h2>
+      <div class="counter-grid">
+        <div class="metric"><div class="label">Total found today</div><div class="value" id="foundToday">$2.4M</div></div>
+        <div class="metric"><div class="label">Wallets checked</div><div class="value" id="walletsChecked">127,453</div></div>
+        <div class="metric"><div class="label">Average per wallet</div><div class="value" id="avgPerWallet">$345</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Results Dashboard</h2>
+      <div class="result-grid">
+        <div>
+          <div class="label">Total Value Found</div>
+          <div class="big-number" id="totalValue">$0.00</div>
+          <div class="tiny" id="scanMeta">Run a scan to populate eligibility details.</div>
+          <h2 style="margin-top:14px;">Eligible Airdrops</h2>
+          <ul id="eligibleList" class="list">
+            <li class="item"><span>No results yet</span><span class="badge">-</span></li>
+          </ul>
+          <h2 style="margin-top:14px;">Ineligible Airdrops</h2>
+          <ul id="ineligibleList" class="list">
+            <li class="item ineligible"><span>No results yet</span><span class="badge">-</span></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Upcoming Airdrops (AI Probability)</h2>
+          <ul id="upcomingList" class="list">
+            <li class="item upcoming"><span>No prediction data yet</span><span class="badge">0%</span></li>
+          </ul>
+          <h2 style="margin-top:14px;">Action Items To Qualify For More</h2>
+          <ul id="actionsList" class="list">
+            <li class="item"><span>Bridge $100 to Arbitrum</span><span class="badge">Starter</span></li>
+            <li class="item"><span>Swap on Uniswap 3 times</span><span class="badge">DEX</span></li>
+            <li class="item"><span>Hold positions for 30 days</span><span class="badge">Consistency</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Share Your Results</h2>
+      <div class="share-grid">
+        <button id="xShare" class="btn ghost">Twitter: "I found $X free!"</button>
+        <button id="tgShare" class="btn ghost">Telegram Share</button>
+        <button id="dcShare" class="btn ghost">Discord Share</button>
+        <button id="copyShare" class="btn primary">Copy Link</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="leader-grid">
+        <h2>Leaderboard</h2>
+        <label class="tiny"><input type="checkbox" id="anonToggle"> Anonymous mode</label>
+      </div>
+      <table>
+        <thead><tr><th>Rank</th><th>Wallet</th><th>Value Found</th><th>Tag</th></tr></thead>
+        <tbody id="leaderboardBody">
+          <tr><td>1</td><td>0x8a...6f11</td><td>$45,000</td><td class="whale">Whale wallet</td></tr>
+          <tr><td>2</td><td>0x16...bb90</td><td>$21,800</td><td>Power user</td></tr>
+          <tr><td>3</td><td>0xa1...d402</td><td>$14,300</td><td>Early adopter</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="card">
+      <h2>Footer</h2>
+      <div class="footer-links">
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub + Commercial Terms</a>
+        <a href="#">Donation Address: 0xDonateYourAddress</a>
+        <a href="/api/health" target="_blank" rel="noopener noreferrer">API Docs for Developers</a>
+        <a href="mailto:enterprise@airdropchecker.example">Contact Enterprise</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    const el = (id) => document.getElementById(id);
+    const walletsInput = el("walletInput");
+    const checkBtn = el("checkBtn");
+    const sampleBtn = el("sampleBtn");
+    const clearBtn = el("clearBtn");
+    const statusEl = el("status");
+
+    const totalValueEl = el("totalValue");
+    const heroValueEl = el("heroValue");
+    const scanMetaEl = el("scanMeta");
+    const eligibleList = el("eligibleList");
+    const ineligibleList = el("ineligibleList");
+    const upcomingList = el("upcomingList");
+    const actionsList = el("actionsList");
+    const heroTop = el("heroTop");
+    const leaderboardBody = el("leaderboardBody");
+    const anonToggle = el("anonToggle");
+
+    const xShare = el("xShare");
+    const tgShare = el("tgShare");
+    const dcShare = el("dcShare");
+    const copyShare = el("copyShare");
+
+    let latestSummary = { totalUsd: 0, wallets: 0 };
+    let leaderboard = [
+      { wallet: "0x8a5f8edc7a8f2bb4e1120c22de9544d35aa86f11", value: 45000, tag: "Whale wallet" },
+      { wallet: "0x16dfc412ffad98e0309a0b101cc2f2aabb90d112", value: 21800, tag: "Power user" },
+      { wallet: "0xa1d2b39f0b4474f5f9d22d33687cf5d2f95d402c", value: 14300, tag: "Early adopter" }
+    ];
+
+    checkBtn.addEventListener("click", runScan);
+    sampleBtn.addEventListener("click", loadSample);
+    clearBtn.addEventListener("click", clearAll);
+    anonToggle.addEventListener("change", renderLeaderboard);
+    xShare.addEventListener("click", () => openShare("x"));
+    tgShare.addEventListener("click", () => openShare("telegram"));
+    dcShare.addEventListener("click", () => openShare("discord"));
+    copyShare.addEventListener("click", copyLink);
+
+    setInterval(tickLiveCounters, 3000);
+    tickLiveCounters();
+    renderLeaderboard();
+
+    function parseWallets() {
+      return [...new Set(walletsInput.value.split(/[\n,;\s]+/g).map((s) => s.trim()).filter(Boolean))];
+    }
+
+    async function runScan() {
+      const wallets = parseWallets();
+      if (!wallets.length) {
+        statusEl.textContent = "Paste at least one wallet address first.";
+        return;
+      }
+      checkBtn.disabled = true;
+      checkBtn.textContent = "Checking...";
+      statusEl.textContent = "Scanning wallets across chains...";
+
+      try {
+        const scanData = await fetchScan(wallets);
+        const predData = await fetchPredictions(wallets);
+        renderScan(scanData, predData);
+        statusEl.textContent = "Scan complete.";
+      } catch (err) {
+        statusEl.textContent = "Backend unavailable, showing simulated results.";
+        renderFallback(wallets);
+      } finally {
+        checkBtn.disabled = false;
+        checkBtn.textContent = "CHECK";
+      }
+    }
+
+    async function fetchScan(wallets) {
+      const res = await fetch("/api/portfolio/scan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ wallets, includeTransfers: true })
+      });
+      if (!res.ok) throw new Error("scan failed");
+      return res.json();
+    }
+
+    async function fetchPredictions(wallets) {
+      const res = await fetch("/api/predictions/eligibility", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ wallets, forceRetrain: false })
+      });
+      if (!res.ok) throw new Error("prediction failed");
+      return res.json();
+    }
+
+    function renderScan(scanData, predData) {
+      const total = Number(scanData?.totals?.estimatedUsd || 0);
+      const checked = Number(scanData?.walletsChecked || 0);
+      latestSummary = { totalUsd: total, wallets: checked };
+      totalValueEl.textContent = usd(total);
+      heroValueEl.textContent = usd(total);
+      scanMetaEl.textContent = `${checked} wallet(s) scanned, ${Number(scanData?.totals?.detectedAirdrops || 0)} detected airdrop hit(s).`;
+
+      const allMatches = [];
+      for (const wallet of scanData.wallets || []) {
+        for (const m of wallet.matches || []) allMatches.push(m);
+      }
+
+      const eligible = allMatches.filter((m) => m.detected).sort((a, b) => b.estimatedUsd - a.estimatedUsd).slice(0, 8);
+      const ineligible = allMatches.filter((m) => !m.detected).slice(0, 8);
+      renderEligible(eligible);
+      renderIneligible(ineligible);
+
+      const predRows = [];
+      for (const w of predData.wallets || []) {
+        for (const p of w.predictions || []) predRows.push(p);
+      }
+      predRows.sort((a, b) => b.probability - a.probability);
+      renderUpcoming(predRows.slice(0, 6));
+      renderActions(predRows.slice(0, 2).flatMap((r) => r.recommendations || []).slice(0, 5));
+
+      const topWallet = (scanData.wallets || []).sort((a, b) => b.estimatedUsd - a.estimatedUsd)[0];
+      if (topWallet) {
+        leaderboard.push({ wallet: topWallet.wallet, value: Number(topWallet.estimatedUsd || 0), tag: "Latest scan" });
+        leaderboard = leaderboard.sort((a, b) => b.value - a.value).slice(0, 12);
+        renderLeaderboard();
+      }
+
+      const topEligible = eligible.slice(0, 3);
+      heroTop.innerHTML = topEligible.length
+        ? topEligible.map((x) => `<li class="item"><span class="eligible">${esc(x.name)}</span><span class="badge">${usd(x.estimatedUsd)}</span></li>`).join("")
+        : '<li class="item"><span>No detected claims</span><span class="badge">$0</span></li>';
+    }
+
+    function renderFallback(wallets) {
+      const rows = wallets.slice(0, 6).map((w, i) => ({
+        name: ["Uniswap", "Arbitrum", "Optimism", "ENS", "Blur", "dYdX"][i % 6],
+        detected: i % 2 === 0,
+        estimatedUsd: (i + 1) * 120 + (w.length % 40)
+      }));
+      const eligible = rows.filter((x) => x.detected);
+      const ineligible = rows.filter((x) => !x.detected);
+      const total = eligible.reduce((s, x) => s + x.estimatedUsd, 0);
+      latestSummary = { totalUsd: total, wallets: wallets.length };
+      totalValueEl.textContent = usd(total);
+      heroValueEl.textContent = usd(total);
+      scanMetaEl.textContent = `${wallets.length} wallet(s) simulated.`;
+      renderEligible(eligible);
+      renderIneligible(ineligible);
+      renderUpcoming([
+        { airdropName: "zkSync", probability: 0.85 },
+        { airdropName: "LayerZero", probability: 0.72 },
+        { airdropName: "EigenLayer", probability: 0.61 }
+      ]);
+      renderActions([
+        "Bridge $100 to Arbitrum.",
+        "Swap on Uniswap 3 times over separate days.",
+        "Keep wallet active weekly for 30 days.",
+        "Use one lending action on L2."
+      ]);
+      heroTop.innerHTML = eligible.map((x) => `<li class="item"><span class="eligible">${esc(x.name)}</span><span class="badge">${usd(x.estimatedUsd)}</span></li>`).join("");
+    }
+
+    function renderEligible(items) {
+      eligibleList.innerHTML = items.length
+        ? items.map((x) => `<li class="item"><span class="eligible">${esc(x.name || x.airdropName || x.key || "Airdrop")}</span><span class="badge">${usd(x.estimatedUsd || 0)}</span></li>`).join("")
+        : '<li class="item"><span>No eligible airdrops found</span><span class="badge">$0</span></li>';
+    }
+
+    function renderIneligible(items) {
+      ineligibleList.innerHTML = items.length
+        ? items.map((x) => `<li class="item ineligible"><span>${esc(x.name || x.airdropName || x.key || "Airdrop")}</span><span class="badge">Not eligible</span></li>`).join("")
+        : '<li class="item ineligible"><span>No ineligible airdrops in current sample</span><span class="badge">-</span></li>';
+    }
+
+    function renderUpcoming(items) {
+      upcomingList.innerHTML = items.length
+        ? items.map((x) => {
+            const pct = Math.round((x.probability || 0) * 100);
+            return `<li class="item upcoming"><span>${esc(x.airdropName || x.name || "Upcoming")}</span><span class="badge">${pct}%</span></li>`;
+          }).join("")
+        : '<li class="item upcoming"><span>No prediction data</span><span class="badge">0%</span></li>';
+    }
+
+    function renderActions(items) {
+      actionsList.innerHTML = items.length
+        ? items.map((x, i) => `<li class="item"><span>${esc(x)}</span><span class="badge">Step ${i + 1}</span></li>`).join("")
+        : '<li class="item"><span>Run scan to get custom action items</span><span class="badge">-</span></li>';
+    }
+
+    function renderLeaderboard() {
+      const anon = anonToggle.checked;
+      leaderboardBody.innerHTML = leaderboard.slice(0, 10).map((r, idx) => {
+        const wallet = anon ? maskWallet(r.wallet) : r.wallet;
+        return `<tr><td>${idx + 1}</td><td>${esc(wallet)}</td><td>${usd(r.value)}</td><td class="${idx === 0 ? "whale" : ""}">${esc(r.tag || "")}</td></tr>`;
+      }).join("");
+    }
+
+    function tickLiveCounters() {
+      const found = randomAround(2400000, 45000);
+      const checked = randomAround(127453, 3500);
+      const avg = found / Math.max(1, checked);
+      el("foundToday").textContent = shortUsd(found);
+      el("walletsChecked").textContent = Math.round(checked).toLocaleString();
+      el("avgPerWallet").textContent = usd(avg);
+    }
+
+    function openShare(network) {
+      const text = encodeURIComponent(`I found ${usd(latestSummary.totalUsd)} in airdrops across ${latestSummary.wallets} wallet(s)!`);
+      const url = encodeURIComponent(location.href);
+      const map = {
+        x: `https://x.com/intent/tweet?text=${text}&url=${url}`,
+        telegram: `https://t.me/share/url?url=${url}&text=${text}`,
+        discord: `https://discord.com/channels/@me`
+      };
+      const link = map[network];
+      if (link) window.open(link, "_blank", "noopener,noreferrer");
+    }
+
+    async function copyLink() {
+      const text = `I found ${usd(latestSummary.totalUsd)} free crypto. ${location.href}`;
+      try {
+        await navigator.clipboard.writeText(text);
+        statusEl.textContent = "Share text copied.";
+      } catch {
+        statusEl.textContent = "Clipboard blocked. Copy manually from address bar.";
+      }
+    }
+
+    function clearAll() {
+      walletsInput.value = "";
+      latestSummary = { totalUsd: 0, wallets: 0 };
+      totalValueEl.textContent = "$0.00";
+      heroValueEl.textContent = "$0.00";
+      scanMetaEl.textContent = "Run a scan to populate eligibility details.";
+      renderEligible([]);
+      renderIneligible([]);
+      renderUpcoming([]);
+      renderActions([]);
+      heroTop.innerHTML = '<li class="item"><span>No scan yet</span><span class="badge">-</span></li>';
+      statusEl.textContent = "";
+    }
+
+    function loadSample() {
+      walletsInput.value = [
+        "0x7e57d004f9f4d1f2dce447f7dfdf9f9ce17ccf11",
+        "0x5f3f51f4f39c265d8f9b4a11f0473a4e83974944",
+        "0x1457c4e12bf5d7050d4dad6f0d2fa6a95fbe8fa0"
+      ].join("\n");
+      statusEl.textContent = "Sample loaded. Click CHECK.";
+    }
+
+    function shortUsd(v) {
+      const n = Number(v || 0);
+      if (n >= 1000000) return `$${(n / 1000000).toFixed(1)}M`;
+      if (n >= 1000) return `$${(n / 1000).toFixed(1)}K`;
+      return usd(n);
+    }
+    function usd(v) {
+      return "$" + Number(v || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function maskWallet(w) {
+      if (!w || w.length < 10) return w;
+      return `${w.slice(0, 4)}...${w.slice(-4)}`;
+    }
+    function randomAround(base, spread) {
+      return base + (Math.random() * 2 - 1) * spread;
+    }
+    function esc(s) {
+      return String(s || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

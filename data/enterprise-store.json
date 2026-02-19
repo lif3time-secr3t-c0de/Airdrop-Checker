@@ -1,0 +1,11 @@
+{
+  "branding": {
+    "brandName": "Airdrop Checker",
+    "logoUrl": "",
+    "primaryColor": "#38f08b",
+    "customDomain": "",
+    "hideVendorBranding": false,
+    "apiEnabled": true
+  },
+  "customAirdrops": []
+}
