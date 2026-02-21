@@ -1,287 +1,227 @@
-# 🚀 Airdrop Checker - Find Your Free Crypto
+# Airdrop Checker - Multi-Chain Eligibility Tool
 
 ![License](https://img.shields.io/badge/License-Custom-blue)
 ![Version](https://img.shields.io/badge/version-1.0.0-green)
 ![Status](https://img.shields.io/badge/status-live-success)
 
-## 🌐 Live Demo
-**Website:** [https://airdrop-checker.vercel.app](https://airdrop-checker.vercel.app)
+## Live Demo
+**Website:** https://airdrop-checker-ten.vercel.app
 
-**Admin Dashboard:** [https://airdrop-checker.vercel.app/admin.html](https://airdrop-checker.vercel.app/admin.html)
+**Admin Dashboard:** https://airdrop-checker-ten.vercel.app/admin.html
 
-**API Base URL:** [https://airdrop-checker-api.onrender.com](https://airdrop-checker-api.onrender.com)
+**API Base URL:** https://airdrop-checker-api.onrender.com
 
 ---
 
-## 📌 Overview
+## Overview
 
-Airdrop Checker is a powerful, multi-chain cryptocurrency airdrop eligibility tool powered by AI. Check 50+ airdrops across 8 blockchains in seconds, get AI-powered predictions, and track your portfolio.
+Airdrop Checker is a technical tool for checking cryptocurrency airdrop eligibility across multiple blockchains. It uses machine learning to analyze wallet activity and predict eligibility probabilities.
 
-### ✨ Key Features
+### Technical Features
 
 | Feature | Description |
 |---------|-------------|
-| 🔍 **Multi-Chain Support** | Ethereum, Arbitrum, Optimism, Base, Polygon, BNB Chain, Solana, Cosmos |
-| 🤖 **AI Predictions** | Machine learning models predict your eligibility probability (0-100%) |
-| 📊 **Portfolio Scanner** | Scan multiple wallets at once (up to 10,000) |
-| ⚡ **Real-Time Updates** | WebSocket connection for live scanning |
-| 📈 **Admin Dashboard** | Monitor API usage, users, and earnings |
-| 📤 **CSV Export** | Download portfolio data and tax reports |
-| 🔔 **Alerts System** | Telegram, Discord, and webhook notifications |
-| 🏢 **Enterprise Ready** | White-label solutions, custom rules, bulk scanning |
+| Multi-Chain Support | Ethereum, Arbitrum, Optimism, Base, Polygon, BNB Chain, Solana, Cosmos |
+| ML Predictions | Logistic regression models predict eligibility (0-100%) |
+| Portfolio Scanner | Batch scanning for multiple wallets (up to 10,000) |
+| Real-Time Updates | WebSocket connection for live scanning |
+| Admin Dashboard | API usage metrics and system monitoring |
+| CSV Export | Portfolio data export functionality |
+| Alert System | Telegram and Discord webhook notifications |
+| Enterprise Features | White-label solutions and custom rules |
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 **Backend:**
-- Node.js + Express
-- PostgreSQL (Supabase)
-- WebSocket for real-time updates
+- Node.js / Express
+- PostgreSQL
+- WebSocket
 - Machine Learning (Logistic Regression)
 
 **Frontend:**
 - HTML5 / CSS3
-- Vanilla JavaScript
-- Responsive design
+- JavaScript
+- Responsive Design
 
-**Deployment:**
+**Infrastructure:**
 - Render (Backend API)
 - Vercel (Frontend)
-- Supabase (Database)
-- cron-job.org (Keep alive)
+- Supabase (PostgreSQL)
+- cron-job.org (Uptime monitoring)
 
 ---
 
-## 🔗 Supported Blockchains
+## Supported Networks
 
-| Chain | API | Status |
-|-------|-----|--------|
+| Network | API Provider | Status |
+|---------|--------------|--------|
 | Ethereum | Etherscan | ✅ Live |
 | Arbitrum | Arbiscan | ✅ Live |
 | Optimism | Optimistic Etherscan | ✅ Live |
 | Base | Basescan | ✅ Live |
 | Polygon | Polygonscan | ✅ Live |
 | BNB Chain | BscScan | ✅ Live |
-| Solana | SolanaFM | ✅ Live (beta) |
-| Cosmos | Mintscan | ⚠️ Coming soon |
+| Solana | SolanaFM | ✅ Beta |
+| Cosmos | Mintscan | ⚠️ Development |
 
 ---
 
-## 📊 Airdrops Included (50+)
+## Airdrop Database
 
-**Major Past Airdrops:**
-- Uniswap (UNI) - avg $1200
-- Arbitrum (ARB) - avg $1500
-- Optimism (OP) - avg $800
-- ENS - avg $500
-- dYdX - avg $700
-- 1inch - avg $300
-- Aave - avg $1000
-- Compound - avg $600
-- SushiSwap - avg $400
-- Curve - avg $800
-- Convex - avg $500
-- LooksRare - avg $300
-- Blur - avg $600
-- Aptos - avg $2000
-- Celestia - avg $1000
-- StarkNet - avg $1500
-- zkSync - avg $1200
-- LayerZero - avg $2000
-- EigenLayer - avg $1800
-- Jito - avg $400
-- Pyth - avg $300
-- Jupiter - avg $500
-- Tensor - avg $400
-- Wormhole - avg $600
-- EtherFi - avg $700
-- Renzo - avg $300
-- Kelp - avg $250
-- Swell - avg $300
-- Ethena - avg $800
-- Saga - avg $500
+The tool checks eligibility for 50+ historical airdrops including:
 
-...and 20+ more!
+Uniswap (UNI), Arbitrum (ARB), Optimism (OP), ENS, dYdX, 1inch, Aave, Compound, SushiSwap, Curve, Convex, LooksRare, Blur, Aptos, Celestia, StarkNet, zkSync, LayerZero, EigenLayer, Jito, Pyth, Jupiter, Tensor, Wormhole, EtherFi, Renzo, Kelp, Swell, Ethena, Saga, and more.
 
 ---
 
-## 🤖 AI Prediction Features
+## ML Prediction Features
 
 | Feature | Description |
 |---------|-------------|
-| 🎯 **Eligibility Score** | 0-100% probability for each airdrop |
-| 🟢🟡🔴 **Color Coding** | Green (70%+), Yellow (40-69%), Red (<40%) |
-| 💬 **Prediction Text** | "Wallet X has 85% chance for zkSync airdrop" |
-| 📝 **Recommendations** | Action items to improve eligibility |
-| 💰 **Value Predictions** | Estimated USD value if eligible |
-| 📊 **Expected Value** | Probability-weighted value |
+| Eligibility Score | 0-100% probability per airdrop |
+| Confidence Scoring | Statistical confidence levels |
+| Recommendation Engine | Action items based on wallet analysis |
+| Value Estimates | Historical average projections |
 
 ---
 
-## 📡 API Endpoints
+## API Documentation
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/health` | Health check |
-| GET | `/api/airdrops` | List all airdrops |
-| GET | `/api/airdrops/chains` | Supported chains |
+| GET | `/api/health` | Service health check |
+| GET | `/api/airdrops` | List all tracked airdrops |
+| GET | `/api/airdrops/chains` | Supported networks |
 | POST | `/api/airdrops/check` | Check wallet eligibility |
-| POST | `/api/portfolio/scan` | Scan multiple wallets |
-| POST | `/api/portfolio/export.csv` | Export as CSV |
-| POST | `/api/predictions/eligibility` | AI predictions |
-| GET | `/api/integrations/catalog` | API integrations |
-| GET | `/api/admin/metrics` | Admin stats |
-| POST | `/api/alerts/subscribe` | Set up alerts |
-| GET | `/api/analytics/historical` | Missed airdrops analysis |
-| GET | `/api/tax/report.csv` | Tax report download |
+| POST | `/api/portfolio/scan` | Multi-wallet scanning |
+| POST | `/api/portfolio/export.csv` | CSV export |
+| POST | `/api/predictions/eligibility` | ML predictions |
+| GET | `/api/integrations/catalog` | API integrations list |
+| GET | `/api/admin/metrics` | System metrics |
+| POST | `/api/alerts/subscribe` | Alert subscriptions |
+| GET | `/api/analytics/historical` | Historical analysis |
+| GET | `/api/tax/report.csv` | Tax report generation |
 
-**WebSocket:** `wss://airdrop-checker-api.onrender.com/ws` for real-time scanning
+**WebSocket Endpoint:** `wss://airdrop-checker-api.onrender.com/ws`
 
 ---
 
-## 💼 Commercial License
+## License and Commercial Use
 
-**This software is FREE FOR PERSONAL USE only.**
-
-### ✅ Free for:
-- Individuals
-- Learning and testing
+**Free for Personal Use:**
+- Individual developers
+- Learning and experimentation
 - Personal projects
-- Non-commercial use
+- Non-commercial applications
 
-### 💰 Commercial Use (PAID):
-Companies, organizations, or individuals generating revenue using this code MUST obtain a commercial license.
+**Commercial Licensing:**
+Organizations using this software for revenue-generating activities require a commercial license.
 
-**Commercial License Includes:**
-- ✅ Permanent commercial usage rights
-- ✅ Written legal agreement
-- ✅ Invoice for your records
-- ✅ Priority email support
-- ✅ Custom modifications available
+Commercial License Includes:
+- Permanent usage rights
+- Legal agreement
+- Invoice documentation
+- Priority support
+- Custom modification options
 
-**Pricing:**
-- Basic Commercial License: $500 - $2000 (depending on scope)
-- Enterprise License: $2000 - $10,000+ (custom agreement)
-
-### 📞 Contact for Commercial Use:
-📧 **Email:** thisiswaliraza@gmail.com
-
-**⚠️ IMPORTANT: No third party scammers - deal directly with me only!**
+**Contact for Licensing:**
+📧 thisiswaliraza@gmail.com
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Local Development
 
 ```bash
-# Clone the repository
+# Clone repository
 git clone https://github.com/lif3time-secr3t-c0de/Airdrop-Checker.git
 cd Airdrop-Checker
 
 # Install dependencies
 npm install
 
-# Create .env file (copy from .env.example)
+# Configure environment
 cp .env.example .env
-# Edit .env and add your API keys
+# Add your API keys to .env
 
 # Start development server
 npm run dev
 
-# Open in browser
+# API health check
 # http://localhost:4000/api/health
-# Open index.html directly in browser
 ```
 
-### Required API Keys:
-- Etherscan API key (free from https://etherscan.io)
-- Other chain APIs optional (Arbiscan, BscScan, etc.)
+### Required API Keys
+- Etherscan API key (free from etherscan.io)
+- Additional chain APIs optional (Arbiscan, BscScan, etc.)
 
 ---
 
-## 📦 Deployment
+## Deployment Guide
 
 ### Backend (Render)
-```
 1. Push code to GitHub
-2. Go to https://render.com
-3. Create new Web Service
-4. Connect your GitHub repo
-5. Set build command: npm install
-6. Set start command: npm start
-7. Add environment variables
-8. Deploy
-```
+2. Create new Web Service on Render
+3. Connect repository
+4. Set build command: `npm install`
+5. Set start command: `npm start`
+6. Add environment variables
+7. Deploy
 
 ### Frontend (Vercel)
-```
-1. Go to https://vercel.com
-2. Import your GitHub repo
-3. Deploy (static site)
-4. Update API_BASE in index.html with your Render URL
-```
+1. Import repository to Vercel
+2. Deploy as static site
+3. Configure `API_BASE` in frontend code
 
-### Database (Supabase - Optional)
-```
+### Database (Optional)
 1. Create Supabase project
 2. Run schema.sql
-3. Add DATABASE_URL to Render environment
-```
+3. Add `DATABASE_URL` to Render environment
 
-### Keep Alive (cron-job.org)
-```
-1. Go to https://cron-job.org
-2. Create cronjob pinging /api/health every 15 minutes
-3. Prevents Render from sleeping
-```
+### Uptime Monitoring
+1. Create cron-job at cron-job.org
+2. Set to ping `/api/health` every 15 minutes
+3. Prevents service sleep
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 Airdrop-Checker/
-├── api/                    # Vercel serverless functions
+├── api/                    # Serverless functions
 ├── db/                      # Database schemas
-│   ├── schema.sql
-│   ├── schema_enterprise.sql
-│   └── seeds/
-├── scripts/                 # Python utilities
-│   └── update_token_prices.py
-├── src/                     # Backend source code
-│   ├── config/              # Configuration files
-│   ├── middleware/          # Express middleware
-│   ├── realtime/            # WebSocket implementation
-│   ├── routes/              # API routes
-│   ├── services/            # Business logic
-│   └── utils/               # Helper functions
-├── supabase/                # Supabase migrations
-├── admin.html               # Admin dashboard
-├── index.html               # Main frontend
-├── package.json             # Dependencies
-├── render.yaml              # Render deployment config
-├── vercel.json              # Vercel deployment config
-└── README.md                # This file
+├── scripts/                 # Utility scripts
+├── src/                     # Backend source
+│   ├── config/             # Configuration
+│   ├── middleware/         # Express middleware
+│   ├── realtime/           # WebSocket implementation
+│   ├── routes/             # API routes
+│   ├── services/           # Business logic
+│   └── utils/              # Helpers
+├── supabase/                # Database migrations
+├── admin.html               # Admin interface
+├── index.html               # Main interface
+└── package.json             # Dependencies
 ```
 
 ---
 
-## 🔒 Environment Variables
+## Environment Configuration
 
-Create a `.env` file with:
-
-```
+```env
 PORT=4000
-ETHERSCAN_API_KEY=your_key_here
-ARBISCAN_API_KEY=your_key_here
-OPTIMISTIC_ETHERSCAN_API_KEY=your_key_here
-BASESCAN_API_KEY=your_key_here
-POLYGONSCAN_API_KEY=your_key_here
-BSCSCAN_API_KEY=your_key_here
-SOLANAFM_API_KEY=your_key_here
+ETHERSCAN_API_KEY=your_key
+ARBISCAN_API_KEY=your_key
+OPTIMISTIC_ETHERSCAN_API_KEY=your_key
+BASESCAN_API_KEY=your_key
+POLYGONSCAN_API_KEY=your_key
+BSCSCAN_API_KEY=your_key
+SOLANAFM_API_KEY=your_key
 DATABASE_URL=postgresql://...
-ADMIN_API_KEY=your_admin_key
-ENTERPRISE_API_KEY=your_enterprise_key
+ADMIN_API_KEY=your_key
+ENTERPRISE_API_KEY=your_key
 CACHE_TTL_SECONDS=180
 CHECK_ROUTE_MAX_PER_MINUTE=30
 PREDICTION_ROUTE_MAX_PER_MINUTE=20
@@ -292,63 +232,41 @@ PLATFORM_FEE_BPS=100
 
 ---
 
-## 📊 Admin Dashboard
+## Admin Dashboard
 
-Access at: `https://airdrop-checker.vercel.app/admin.html`
+Access: `https://airdrop-checker-ten.vercel.app/admin.html`
 
 Features:
-- 📈 Real-time API metrics
-- 👥 User statistics
-- 💰 Earnings tracking
-- 📊 Request volume charts
-- 🔥 Top API routes
-- 📉 Error rate monitoring
+- API request metrics
+- User analytics
+- Revenue tracking
+- Request volume charts
+- Error rate monitoring
 
 ---
 
-## 🤝 Contributing
+## Support
 
-This project is open for personal use and learning. For commercial contributions or modifications, please contact for licensing.
+**Technical Issues:** Open GitHub issue
 
----
-
-## 📞 Support
-
-**For personal use:** Open an issue on GitHub
-
-**For commercial inquiries:** Email thisiswaliraza@gmail.com
+**Licensing Questions:** thisiswaliraza@gmail.com
 
 ---
 
-## ⚖️ License
-
-**Custom Commercial License** - All rights reserved.
-
-This software is free for personal, non-commercial use only. Commercial use requires a paid license and written agreement from the copyright holder.
-
-See the [LICENSE](LICENSE) file for full terms.
-
-**Unauthorized commercial use is prohibited and may result in legal action.**
-
----
-
-## 🎉 Acknowledgments
+## Acknowledgments
 
 - Etherscan for blockchain data APIs
 - CoinGecko for price data
-- All the airdrop projects that made this possible
-- The open source community
+- Open source community
 
 ---
 
-## 📈 Stats
+## Repository Statistics
 
 ![GitHub stars](https://img.shields.io/github/stars/lif3time-secr3t-c0de/Airdrop-Checker?style=social)
 ![GitHub forks](https://img.shields.io/github/forks/lif3time-secr3t-c0de/Airdrop-Checker?style=social)
 ![GitHub watchers](https://img.shields.io/github/watchers/lif3time-secr3t-c0de/Airdrop-Checker?style=social)
 
 ---
-
-**Made with ❤️ for the crypto community**
 
 © 2026 lif3time-secr3t-c0de. All rights reserved.
